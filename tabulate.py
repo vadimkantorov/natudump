@@ -57,9 +57,9 @@ for f in os.listdir(args.input_directory):
                     name = record.split(')')[0]
                     lastname, firstname = name.split('(')[0].strip(), name.split('(')[1].rstrip(')')
                     gender = 'm' if 'né le' in record.lower() else 'f'
-                    birth = record.split('é le' if gender == 'm' else 'ée le')[1].strip()
+                    birth = re.split('NAT|EFF|LIB', record.split('é le' if gender == 'm' else 'ée le')[1].strip())[0]
                     birthdate = birth.split()[0]
-                    birthplace = ' '.join(birth.split(',')[0].split(' ')[2:])
+                    birthplace = ' '.join(birth.split()[1:]).strip('àu ,')
                     dep = record.split('dép.')[1].split(',')[0].strip() if 'dép' in record.lower() else ''
                     comment = ''
 
