@@ -12,6 +12,8 @@ args = parser.parse_args()
 
 records = ['\t'.join(['section', 'date', 'url', 'decree', 'firstname', 'lastname', 'gender', 'birthdate', 'birthplace', 'dep', 'comment'])]
 
+ignored = []
+
 for f in os.listdir(args.input_directory):
     yearmonthday, num = f.split('_')[1:3]
     year, month, day = yearmonthday[:4], yearmonthday[4:6], yearmonthday[6:]
@@ -44,6 +46,9 @@ for f in os.listdir(args.input_directory):
             continue
 
         else:
+            if args.section != section:
+                ignored.append(L)
+
             if section == 'naturalisation':
                 if L.endswith('.') and (record or F.isupper()):
                     record += L
@@ -72,6 +77,9 @@ for f in os.listdir(args.input_directory):
                 
                 elif record:
                     record += L
+
+                else:
+                    ignored.append(L)
                     
             if section == 'changementdenom':
                 if L.endswith('.'):
@@ -86,3 +94,4 @@ for f in os.listdir(args.input_directory):
                     record += L
 
 open(args.output_path, 'w').write('\n'.join(records))
+open(args.output_path + '.ignored.txt', 'w').write('\n'.join(ignored))
