@@ -9,8 +9,7 @@ parser.add_argument('--legifrance', default = 'https://www.legifrance.gouv.fr/jo
 parser.add_argument('--section', default = 'naturalisation')
 args = parser.parse_args()
 
-records = [('section', 'date', 'url', 'decree', 'action', 'lastname', 'firstname', 'gender', 'birthdate', 'birthplace', 'dep', 'comment')]
-
+records = []
 ignored = []
 ignored_joe = []
 matched_joe = []
@@ -102,7 +101,7 @@ for f in os.listdir(args.input_directory):
                     record += L
     (ignored_joe if ignore else matched_joe).append(f)
 
-open(args.output_path, 'w').write('\n'.join(map('\t'.join, sorted(records, key = lambda r: (r[5], r[6])))))
+open(args.output_path, 'w').write('\n'.join(map('\t'.join, [('section', 'date', 'url', 'decree', 'action', 'lastname', 'firstname', 'gender', 'birthdate', 'birthplace', 'dep', 'comment')] + sorted(records, key = lambda r: (r[5], r[6])))))
 open(args.output_path + '.ignored.txt', 'w').write('\n'.join(ignored))
 open(args.output_path + '.ignored_joe.txt', 'w').write('\n'.join(ignored_joe))
 open(args.output_path + '.matched_joe.txt', 'w').write('\n'.join(matched_joe))
