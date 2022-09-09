@@ -7,12 +7,13 @@ parser.add_argument('--input-directory', '-i', default = 'jotxt')
 parser.add_argument('--output-path', '-o', default = 'natu.txt')
 parser.add_argument('--legifrance', default = 'https://www.legifrance.gouv.fr/jorf/jo/{year}/{month}/{day}/{num}')
 parser.add_argument('--section', default = 'naturalisation')
-
 args = parser.parse_args()
 
-records = ['\t'.join(['section', 'date', 'url', 'decree', 'firstname', 'lastname', 'gender', 'birthdate', 'birthplace', 'dep', 'comment'])]
+records = [('section', 'date', 'url', 'decree', 'action', 'lastname', 'firstname', 'gender', 'birthdate', 'birthplace', 'dep', 'comment')]
 
 ignored = []
+ignored_joe = []
+matched_joe = []
 
 for f in os.listdir(args.input_directory):
     yearmonthday, num = f.split('_')[1:3]
@@ -25,11 +26,16 @@ for f in os.listdir(args.input_directory):
     record = None
     
     lines = list(filter(bool, map(str.strip, lines)))
+    ignore = True
     for i in range(len(lines)):
         L = lines[i]
         L = L.replace('  ', ' ')
         F = (re.split('[^a-zA-Z]', L) + [''])[0]
         l = L.lower()
+        
+        if section == args.section:
+            ignore = False
+
         if 'sont naturalisés français' in l or 'l’acquisition de la nationalité française' in l:
             section = 'naturalisation'
             record = ''
@@ -41,12 +47,12 @@ for f in os.listdir(args.input_directory):
         elif 'Art.' in L:
             section = None
             record = ''
-
+        
         elif 'libéré de l’allégeance française' in L:
             continue
 
         else:
-            if args.section != section:
+            if section != args.section:
                 ignored.append(L)
 
             if section == 'naturalisation':
@@ -55,7 +61,7 @@ for f in os.listdir(args.input_directory):
                     if L.endswith('dép.') or L.endswith('Dt.') or record.count('(') != record.count(')'):
                         continue
 
-                    if not 'né' in record.lower():
+                    if 'né' not in record.lower():
                         record = ''
                         continue
 
@@ -63,13 +69,15 @@ for f in os.listdir(args.input_directory):
                     lastname, firstname = name.split('(')[0].strip(), name.split('(')[1].rstrip(')')
                     gender = 'm' if 'né le' in record.lower() else 'f'
                     birth = re.split('NAT|EFF|LIB', record.split('é le' if gender == 'm' else 'ée le')[1].strip())[0]
+                    record_nospace = record.replace(' ', '')
+                    action = 'NAT' if ',NAT,' in record_nospace else 'EFF' if ',EFF,' in record_nospace else 'LIB' if ',LIB,' in record_nospace else ''
                     birthdate = birth.split()[0]
                     birthplace = ' '.join(birth.split()[1:]).strip('àu ,')
                     dep = record.split('dép.')[1].split(',')[0].strip() if 'dép' in record.lower() else ''
                     comment = ''
 
-                    if args.section == section:
-                        records.append('\t'.join([section, date, url, f.rstrip('.txt'), firstname, lastname, gender, birthdate, birthplace, dep, comment.replace('\t', '')]))
+                    if section == args.section:
+                        records.append((section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, dep, comment.replace('\t', '')))
                     record = ''
                 
                 elif F.isupper() and not record and 'né' in l:
@@ -84,14 +92,17 @@ for f in os.listdir(args.input_directory):
             if section == 'changementdenom':
                 if L.endswith('.'):
                     record += L
-                    if args.section == section:
-                        firstname = lastname = gender = birthdate = birthplace = dep = ''
+                    if section == args.section:
+                        firstname = lastname = gender = birthdate = birthplace = dep = action = ''
                         comment = record
-                        records.append('\t'.join([section, date, url, f.rstrip('.txt'), firstname, lastname, gender, birthdate, birthplace, dep, comment.replace('\t', '')]))
+                        records.append((section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, dep, comment.replace('\t', '')))
                     record = ''
                 
                 elif not L.startswith('No. ') and not L.startswith('No '):
                     record += L
+    (ignored_joe if ignore else matched_joe).append(f)
 
-open(args.output_path, 'w').write('\n'.join(records))
+open(args.output_path, 'w').write('\n'.join(map('\t'.join, sorted(records, key = lambda r: (r[5], r[6])))))
 open(args.output_path + '.ignored.txt', 'w').write('\n'.join(ignored))
+open(args.output_path + '.ignored_joe.txt', 'w').write('\n'.join(ignored_joe))
+open(args.output_path + '.matched_joe.txt', 'w').write('\n'.join(matched_joe))

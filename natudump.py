@@ -71,7 +71,7 @@ if __name__ == '__main__':
     }
     chrome_options = selenium.webdriver.ChromeOptions()
     chrome_options.add_experimental_option('prefs', chrome_prefs)
-    chrome_options.headless = True
+    chrome_options.add_argument('--headless')
     chrome_service = selenium.webdriver.chrome.service.Service(executable_path = args.chromedriver)
 
     #driver.request_interceptor = driver.response_interceptor = (lambda request, response: print(request.url, request.headers, response.headers))
