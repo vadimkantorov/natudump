@@ -3,8 +3,8 @@ import re
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input-directory', '-i', default = 'jotxt')
-parser.add_argument('--output-path', '-o', default = 'natu.txt')
+parser.add_argument('--input-directory', '-i', default = 'txtjo')
+parser.add_argument('--output-path', '-o', default = 'natufrance.txt')
 parser.add_argument('--legifrance', default = 'https://www.legifrance.gouv.fr/jorf/jo/{year}/{month}/{day}/{num}')
 parser.add_argument('--section', default = 'naturalisation')
 args = parser.parse_args()
