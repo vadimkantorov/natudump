@@ -67,9 +67,9 @@ for f in os.listdir(args.input_directory):
                     name = record.split(')')[0]
                     lastname, firstname = name.split('(')[0].strip(), name.split('(')[1].rstrip(')')
                     gender = 'm' if 'né le' in record.lower() else 'f'
-                    birth = re.split('NAT|EFF|LIB', record.split('é le' if gender == 'm' else 'ée le')[1].strip())[0]
+                    birth = re.split('NAT|EFF|LIB|REI', record.split('é le' if gender == 'm' else 'ée le')[1].strip())[0]
                     record_nospace = record.replace(' ', '')
-                    action = 'NAT' if ',NAT,' in record_nospace else 'EFF' if ',EFF,' in record_nospace else 'LIB' if ',LIB,' in record_nospace else ''
+                    action = 'NAT' if ',NAT,' in record_nospace else 'EFF' if ',EFF,' in record_nospace else 'LIB' if ',LIB,' in record_nospace else 'REI' if ',REI,' in record_nospace else ''
                     birthdate = birth.split()[0]
                     birthplace = ' '.join(birth.split()[1:]).strip('àau ,')
                     if birthplace.count('(') == birthplace.count(')') == 1:
