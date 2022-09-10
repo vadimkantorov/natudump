@@ -51,7 +51,7 @@ if __name__ == '__main__':
     parser.add_argument('--jo-download', default= 'https://www.legifrance.gouv.fr/download/secure/file/{token}')
     parser.add_argument('--years', default = [2016, 2017, 2018, 2019, 2020, 2021], type = int, nargs = '+')
     parser.add_argument('--output-directory', '-o', default = 'jo')
-    parser.add_argument('--output-directory-prefix', default = 'C:\\Users\\vadim\\natudump\\')
+    parser.add_argument('--output-directory-prefix', default = '')
     parser.add_argument('--chromedriver', default = '/usr/bin/chromedriver')
     parser.add_argument('--timeout', type = float, default = 10.0)
     parser.add_argument('--timeout-big', type = float, default = 30.0)
