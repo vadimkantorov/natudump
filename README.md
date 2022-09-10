@@ -4,7 +4,7 @@ This is example of scraping public LegiFrance registry for research purposes onl
 pip install selenium charset_normalizer
 
 mkdir -p jo
-python3 natudump.py -o jo --years 2016 2017 2018 2019 2020 2021
+python3 natudump.py -o jo --years 2016 2017 2018 2019 2020 2021 --output-directory-prefix "C:\\Users\\vadim\\natudump\\"
 ls jo | wc -l
 
 mkdir -p jotxt
