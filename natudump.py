@@ -34,9 +34,7 @@ class JoCaptcha(html.parser.HTMLParser):
         for k, v in replace.items():
             captcha = captcha.replace(k, str(v))
         
-        if any(c not in '?+=0123456789' for c in captcha) or '=' not in captcha:
-            print(captcha)
-            assert False
+        assert all(c in '?+=0123456789' for c in captcha) and '=' in captcha, captcha
 
         ab, c = captcha.split('=')
         a, b = ab.split('+')
