@@ -13,4 +13,5 @@ for f in $(ls jo); do PYTHONPATH=$PWD/pdfminer.six:$PWD/pdfminer.six/tools:$PYTH
 ls jotxt | wc -l
 
 python3 tabulate.py -i jotxt -o natufrance_2016_2021.txt --section naturalisation
+head -n 2 natufrance_2016_2021.txt
 ```
