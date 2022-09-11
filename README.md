@@ -13,5 +13,5 @@ PYTHONPATH=$PWD/pdfminer.six:$PWD/pdfminer.six/tools:$PYTHONPATH find jo -name '
 ls txtjo | wc -l
 
 python3 tabulate.py -i txtjo -o natufrance_2016_2021.txt --section naturalisation
-head -n 2 natufrance_2016_2021.txt
+grep 'Russie\|URSS\|U.R.S.S' natufrance_2016_2021.txt
 ```
