@@ -47,7 +47,7 @@ class JoCaptcha(html.parser.HTMLParser):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--jo-search', default  = 'https://www.legifrance.gouv.fr/jorf/jo/{year}?page={page}&pageSize=100', help = 'https://www.legifrance.gouv.fr/jorf/jo/2022/08/31/0201?datePubli=31%2F08%2F2022&nature=DECRET')
+    parser.add_argument('--jo-search', default  = 'https://www.legifrance.gouv.fr/jorf/jo/{year}?page={page}&pageSize=100')
     parser.add_argument('--jo-download', default= 'https://www.legifrance.gouv.fr/download/secure/file/{token}')
     parser.add_argument('--years', default = [2016, 2017, 2018, 2019, 2020, 2021], type = int, nargs = '+')
     parser.add_argument('--output-directory', '-o', default = 'jo')
@@ -56,8 +56,10 @@ if __name__ == '__main__':
     parser.add_argument('--timeout', type = float, default = 10.0)
     parser.add_argument('--timeout-big', type = float, default = 30.0)
     parser.add_argument('--page-max', type = int, default = 10)
+    parser.add_argument('--headmore', action = 'store_true')
 
     args = parser.parse_args()
+    print(args)
 
     os.makedirs(args.output_directory, exist_ok = True)
     
@@ -69,7 +71,8 @@ if __name__ == '__main__':
     }
     chrome_options = selenium.webdriver.ChromeOptions()
     chrome_options.add_experimental_option('prefs', chrome_prefs)
-    chrome_options.add_argument('--headless')
+    if not args.headmore:
+        chrome_options.add_argument('--headless')
     chrome_service = selenium.webdriver.chrome.service.Service(executable_path = args.chromedriver)
 
     #driver.request_interceptor = driver.response_interceptor = (lambda request, response: print(request.url, request.headers, response.headers))
@@ -115,7 +118,7 @@ if __name__ == '__main__':
 
                     url = args.jo_download.format(token = token)
                     driver.get(url)
-                    print('Page', page, 'OK', joid)
+                    print('Page', page, 'OK', joid, 'PDF:', url)
                     time.sleep(args.timeout)
 
                 driver.quit()
