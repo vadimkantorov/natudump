@@ -86,17 +86,17 @@ if __name__ == '__main__':
                 driver.get(url)
                 wait.until(selenium.webdriver.support.expected_conditions.url_to_be(url))
 
-                jolinks = driver.find_elements('partial link text' , 'nominatives')
+                jolinks = driver.find_elements('partial link text' , 'nominatives') + driver.find_elements('partial link text', 'version papier numérisée')
 
                 print('Page', page, 'found', len(jolinks), 'links')
                 
-                for jolink in jolinks:
+                for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
                     if any(('joe_' + joid[-4:] + joid[2:4] + joid[:2]) in fname for fname in os.listdir(args.output_directory)):
                         print('Page', page, 'Skipping', joid)
                         continue
 
-                    print('Page', page, 'Processing', joid)
+                    print('Page', page, 'Processing', joid, i, '/', len(jolinks))
                     
                     jolink.click()
                     wait.until(selenium.webdriver.support.expected_conditions.presence_of_element_located(('css selector', '.lf-captcha-line')))
