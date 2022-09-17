@@ -4,7 +4,8 @@ This is example of scraping public LegiFrance registry's naturalisation decrees 
 pip install selenium charset_normalizer
 
 mkdir -p jo
-python3 natudump.py -o jo --years 2016 2017 2018 2019 2020 2021 --output-directory-prefix "C:\\Users\\vadim\\natudump\\"
+NATUDUMPPREFIX="$(wslpath -a -w .)\\" # assuming a WSL system
+python3 natudump.py -o jo --years 2016 2017 2018 2019 2020 2021 --output-directory-prefix "${NATUDUMPPREFIX:-$PWD/}"
 ls jo | wc -l
 
 mkdir -p txtjo

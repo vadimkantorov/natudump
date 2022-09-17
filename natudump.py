@@ -55,8 +55,8 @@ if __name__ == '__main__':
     parser.add_argument('--chromedriver', default = '/usr/bin/chromedriver')
     parser.add_argument('--timeout', type = float, default = 10.0)
     parser.add_argument('--timeout-big', type = float, default = 30.0)
-    parser.add_argument('--page-max', type = int, default = 10)
     parser.add_argument('--headmore', action = 'store_true')
+    parser.add_argument('--debug', default = 'debug.html')
 
     args = parser.parse_args()
     print(args)
@@ -87,6 +87,7 @@ if __name__ == '__main__':
                 url = args.jo_search.format(year = year, page = page)
                 
                 driver.get(url)
+                page_source = driver.page_source
                 wait.until(selenium.webdriver.support.expected_conditions.url_to_be(url))
 
                 jolinks = driver.find_elements('partial link text' , 'nominatives') + driver.find_elements('partial link text', 'version papier numérisée')
@@ -95,7 +96,7 @@ if __name__ == '__main__':
                 
                 for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
-                    if any(('joe_' + joid[-4:] + joid[2:4] + joid[:2]) in fname for fname in os.listdir(args.output_directory)):
+                    if any(((('joe_' + joid[-4:] + joid[2:4] + joid[:2]) in fname) or (joid.rstrip('pdf') in fname)) and '.crdownload' not in fname for fname in os.listdir(args.output_directory)):
                         print('Page', page, 'Skipping', joid)
                         continue
 
@@ -124,7 +125,11 @@ if __name__ == '__main__':
                 driver.quit()
                 page += 1
                 print('Page', page, 'increased')
-                if len(jolinks) == 0 or page == args.page_max:
+                if len(jolinks) == 0:
+                    if args.debug:
+                        print('Debug', args.debug)
+                        with open(args.debug, 'w') as f:
+                            f.write(page_source)
                     break
 
             
