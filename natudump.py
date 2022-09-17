@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
                 jolinks = driver.find_elements('partial link text' , 'nominatives') + driver.find_elements('partial link text', 'version papier numérisée')
 
-                print('Page', page, 'found', len(jolinks), 'links')
+                print('Page', page, 'found', len(jolinks), 'links', url)
                 
                 for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
