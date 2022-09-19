@@ -132,7 +132,7 @@ if __name__ == '__main__':
                     while find_artefacts(joid, temp = True):
                         print('Download in progress, temp file exist, sleeping')
                         time.sleep(args.timeout)
-                    
+                    assert find_artefacts(joid, temp = False), 'Must have final downloaded file'  
                     print('Page', page, 'OK', joid, 'PDF:', url)
 
                 driver.quit()
