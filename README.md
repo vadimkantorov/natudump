@@ -5,7 +5,7 @@ pip install selenium charset_normalizer
 
 mkdir -p jo
 NATUDUMPPREFIX="$(wslpath -a -w .)\\" # assuming a WSL system
-python3 natudump.py -o jo --years $(seq 2016 2021) --output-directory-prefix "${NATUDUMPPREFIX:-$PWD/}"
+python3 natudump.py -o jo --years $(seq 2000 2021) --output-directory-prefix "${NATUDUMPPREFIX:-$PWD/}"
 ls jo | wc -l
 
 mkdir -p txtjo

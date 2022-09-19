@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     #driver.request_interceptor = driver.response_interceptor = (lambda request, response: print(request.url, request.headers, response.headers))
     
-    find_artefacts = lambda joid, temp: [fname for fname in os.listdir(args.output_directory) for prefix in ['joe_' + joid[-4:] + joid[2:4] + joid[:2], joid.rstrip('pdf')] if prefix in fname and '.crdownload' in fname == temp]
+    find_artefacts = lambda joid, temp: [fname for fname in os.listdir(args.output_directory) for prefix in ['joe_' + joid[-4:] + joid[2:4] + joid[:2], joid.rstrip('pdf')] if prefix in fname and ('.crdownload' in fname) == temp]
 
     for year in args.years:
         page = 1
@@ -96,6 +96,7 @@ if __name__ == '__main__':
 
                 print('Page', page, 'found', len(jolinks), 'links', url)
                 
+                breakpoint()
                 for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
                     
@@ -130,7 +131,7 @@ if __name__ == '__main__':
                     
                     time.sleep(args.timeout)
                     while find_artefacts(joid, temp = True):
-                        print('Download in progress, temp file exist, sleeping')
+                        print('Download in progress, temp file exists, sleeping')
                         time.sleep(args.timeout)
                     assert find_artefacts(joid, temp = False), 'Must have final downloaded file'  
                     print('Page', page, 'OK', joid, 'PDF:', url)
