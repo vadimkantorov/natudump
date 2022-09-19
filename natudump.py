@@ -77,6 +77,8 @@ if __name__ == '__main__':
 
     #driver.request_interceptor = driver.response_interceptor = (lambda request, response: print(request.url, request.headers, response.headers))
     
+    find_artefacts = lambda joid, temp: [fname for fname in os.listdir(args.output_directory) for prefix in ['joe_' + joid[-4:] + joid[2:4] + joid[:2], joid.rstrip('pdf')] if prefix in fname and '.crdownload' in fname == temp]
+
     for year in args.years:
         page = 1
         while True:
@@ -96,9 +98,15 @@ if __name__ == '__main__':
                 
                 for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
-                    if any(((('joe_' + joid[-4:] + joid[2:4] + joid[:2]) in fname) or (joid.rstrip('pdf') in fname)) and '.crdownload' not in fname for fname in os.listdir(args.output_directory)):
+                    
+                    res_files = find_artefacts(joid, temp = False)
+                    if res_files:
                         print('Page', page, 'Skipping', joid)
                         continue
+
+                    for fname in find_artefacts(joid, temp = True):
+                        print('Temp file exists, deleting', joid, fname)
+                        os.remove(os.path.join(args.output_directory, fname))
 
                     print('Page', page, 'Processing', joid, i, '/', len(jolinks))
                     
@@ -119,8 +127,13 @@ if __name__ == '__main__':
 
                     url = args.jo_download.format(token = token)
                     driver.get(url)
-                    print('Page', page, 'OK', joid, 'PDF:', url)
+                    
                     time.sleep(args.timeout)
+                    while find_artefacts(joid, temp = True):
+                        print('Download in progress, temp file exist, sleeping')
+                        time.sleep(args.timeout)
+                    
+                    print('Page', page, 'OK', joid, 'PDF:', url)
 
                 driver.quit()
                 page += 1
