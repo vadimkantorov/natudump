@@ -19,6 +19,7 @@ rm $(PYTHONPATH="$PWD/pdfrw:$PYTHONPATH" find jo/ -type f -not -exec python3 -c 
 for years in $(seq 2000 2021); do PYTHONPATH="$PWD/pdfrw:$PYTHONPATH" python3 pdfrw/examples/cat.py jo/JORF_${years}*; mv cat.JORF_${years}*.pdf catjo; done
 ls catjo | wc -l
 
-python3 tabulate.py -i txtjo -o natufrance_2000_2021.tsv --section naturalisation
+python3 tabulate2016.py -i txtjo -o natufrance_2016_2021.tsv --section naturalisation
+python3 tabulate2015.py -i txtjo -o natufrance_2000_2015.tsv --section naturalisation
 grep 'Russie\|URSS\|U.R.S.S' natufrance_2016_2021.tsv | wc -l
 ```
