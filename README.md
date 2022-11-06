@@ -22,4 +22,8 @@ git clone --branch v0.4 --depth 1 https://github.com/pmaupin/pdfrw
 rm $(PYTHONPATH="$PWD/pdfrw:$PYTHONPATH" find jo/ -type f -not -exec python3 -c 'import sys, pdfrw; pdfrw.PdfReader(sys.argv[1])' {} \; -print)
 for years in $(seq 2000 2021); do PYTHONPATH="$PWD/pdfrw:$PYTHONPATH" python3 pdfrw/examples/cat.py jo/JORF_${years}*; mv cat.JORF_${years}*.pdf catjo; done
 ls catjo | wc -l
+
+mkdir -p tarjo
+for years in $(seq 2000 2021); do tar -cf tarjo/jo${years}.tar jo/*_${years}*; done
+ls tarjo | wc -l
 ```
