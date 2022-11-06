@@ -15,7 +15,7 @@ PYTHONPATH="pdfminer.six:pdfminer.six/tools:$PYTHONPATH" find jo -name '*.pdf' -
 ls txtjo | wc -l
 
 python3 tabulate.py -i txtjo -o natufrance_2000_2021.tsv
-grep 'Russie\|URSS\|U.R.S.S' natufrance_2016_2021.tsv | wc -l
+grep 'Russie\|URSS\|U.R.S.S' natufrance_2000_2021.tsv | wc -l
 
 mkdir -p catjo
 git clone --branch v0.4 --depth 1 https://github.com/pmaupin/pdfrw
