@@ -6,7 +6,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--input-directory', '-i', default = 'txtjo')
 parser.add_argument('--output-path', '-o', default = 'natufrance.tsv')
 parser.add_argument('--legifrance', default = 'https://www.legifrance.gouv.fr/jorf/jo/{year}/{month}/{day}/{num}')
-parser.add_argument('--section', default = 'naturalisation')
+parser.add_argument('--section', default = 'naturalisation', help = 'nat : naturalisé français ; rei : réintégré dans la nationalité française ; eff : enfant saisi par l’effet collectif attaché à l’acquisition de la nationalité française par ses parents ; lib : libéré de l’allégeance française')
 args = parser.parse_args()
 
 records = []
@@ -82,7 +82,7 @@ for f in os.listdir(args.input_directory):
                     comment = ''
 
                     if section == args.section:
-                        records.append((section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, birthcountry, dep, comment.replace('\t', '')))
+                        records.append((year, section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, birthcountry, dep, comment.replace('\t', '')))
                     record = ''
                 
                 elif F.isupper() and not record and 'né' in l:
@@ -100,14 +100,14 @@ for f in os.listdir(args.input_directory):
                     if section == args.section:
                         firstname = lastname = gender = birthdate = birthplace = birthcountry = dep = action = ''
                         comment = record
-                        records.append((section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, birthcountry, dep, comment.replace('\t', '')))
+                        records.append((year, section, date, url, f.rstrip('.txt'), action, lastname, firstname, gender, birthdate, birthplace, birthcountry, dep, comment.replace('\t', '')))
                     record = ''
                 
                 elif not L.startswith('No. ') and not L.startswith('No '):
                     record += L
     (ignored_joe if ignore else matched_joe).append(f)
 
-open(args.output_path, 'w').write('\n'.join(map('\t'.join, [('section', 'date', 'url', 'decree', 'action', 'lastname', 'firstname', 'gender', 'birthdate', 'birthplace', 'birthcountry', 'dep', 'comment')] + sorted(records, key = lambda r: (r[5], r[6])))))
+open(args.output_path, 'w').write('\n'.join(map('\t'.join, [('year', 'section', 'date', 'url', 'decree', 'action', 'lastname', 'firstname', 'gender', 'birthdate', 'birthplace', 'birthcountry', 'dep', 'comment')] + sorted(records, key = lambda r: (r[6], r[7])))))
 open(args.output_path + '.ignored.txt', 'w').write('\n'.join(ignored))
 open(args.output_path + '.ignored_joe.txt', 'w').write('\n'.join(ignored_joe))
 open(args.output_path + '.matched_joe.txt', 'w').write('\n'.join(matched_joe))
