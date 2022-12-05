@@ -82,6 +82,7 @@ if __name__ == '__main__':
     for year in args.years:
         page = 1
         while True:
+            driver = None
             try:
                 driver = selenium.webdriver.Chrome(options = chrome_options, service = chrome_service)
                 wait = selenium.webdriver.support.ui.WebDriverWait(driver, args.timeout)
@@ -150,5 +151,6 @@ if __name__ == '__main__':
             except Exception as e:
                 print(e)
                 print('Page', page, 'big timeout')
-                driver.quit()
+                if driver is not None:
+                    driver.quit()
                 time.sleep(args.timeout_big)
