@@ -1,4 +1,4 @@
-This is example of scraping public LegiFrance registry's naturalisation decrees for research purposes only. Code license is MIT.
+This is example of scraping public LegiFrance registry's naturalisation decrees for research purposes only (`naturalisation par mariage` is not included in these decrees). Code license is MIT.
 
 ```shell
 pip install selenium charset_normalizer
