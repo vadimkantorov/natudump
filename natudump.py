@@ -97,7 +97,6 @@ if __name__ == '__main__':
 
                 print('Page', page, 'found', len(jolinks), 'links', url)
                 
-                breakpoint()
                 for i, jolink in enumerate(jolinks):
                     joid = jolink.get_attribute('data-textid')
                     
