@@ -52,7 +52,7 @@ if __name__ == '__main__':
     parser.add_argument('--years', default = [2016, 2017, 2018, 2019, 2020, 2021], type = int, nargs = '+')
     parser.add_argument('--output-directory', '-o', default = 'jo')
     parser.add_argument('--output-directory-prefix', default = '')
-    parser.add_argument('--chromedriver', default = '/usr/bin/chromedriver')
+    parser.add_argument('--chromedriver', default = '/usr/bin/chromedriver', help="for WSLv1, this path should symlink to chromedriver.exe extracted from a zipball chromedriver_win32.zip downloaded from https://chromedriver.chromium.org/downloads, don' t forget to update it when you upgrade the host Chrome")
     parser.add_argument('--timeout', type = float, default = 10.0)
     parser.add_argument('--timeout-big', type = float, default = 30.0)
     parser.add_argument('--headmore', action = 'store_true')
